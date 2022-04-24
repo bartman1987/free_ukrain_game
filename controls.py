@@ -35,12 +35,13 @@ def update(bg_color, screen, gun, putins, bullets):
     putins.draw(screen)
     pygame.display.flip()
     
-def update_bullets(bullets):
+def update_bullets(putins, bullets):
     """обновляет позиции пуль"""
     bullets.update()
     for bullet in bullets. copy():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
+    collisions = pygame.sprite.groupcollide(bullets, putins, True, True)
             
 def update_putins(putins):
     """обновляет позицию путина"""
