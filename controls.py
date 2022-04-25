@@ -29,9 +29,10 @@ def events(screen, gun, bullets):
                 gun.mleft = False
 
 
-def update(bg_color, screen, gun, putins, bullets):
+def update(bg_color, screen, stats, sc, gun, putins, bullets):
     """обновление экрана"""
     screen.fill(bg_color)
+    sc.show_score()
     for bullet in bullets.sprites():
         bullet.draw_bullet()
     gun.output()
@@ -39,23 +40,35 @@ def update(bg_color, screen, gun, putins, bullets):
     pygame.display.flip()
 
 
-def update_bullets(putins, bullets):
+def update_bullets(screen, stats, sc, putins, bullets):
     """обновляет позиции пуль"""
     bullets.update()
     for bullet in bullets. copy():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
     collisions = pygame.sprite.groupcollide(bullets, putins, True, True)
+    if collisions:
+        for putins in collisions.values():
+            stats.score += 10 * len(putins)
+        sc.image_score()
+        chek_high_score(stats, sc)
+    if len(putins) == 0:
+        bullets.empty()
+        create_army(screen, putins)
 
 
 def gun_kill(stats, screen, gun, putins, bullets):
     """столкновение пушки и армии"""
-    stats.guns_left -= 1
-    putins.empty()
-    bullets.empty()
-    create_army(screen, putins)
-    gun.create_gun()
-    time.sleep(2)
+    if stats.guns_left > 0:
+        stats.guns_left -= 1
+        putins.empty()
+        bullets.empty()
+        create_army(screen, putins)
+        gun.create_gun()
+        time.sleep(1)
+    else:
+        stats.run_game = False
+        sys.exit()
 
 
 def update_putins(stats, screen, gun, putins, bullets):
@@ -63,6 +76,16 @@ def update_putins(stats, screen, gun, putins, bullets):
     putins.update()
     if pygame.sprite.spritecollideany(gun, putins):
         gun_kill(stats, screen, gun, putins, bullets)
+    inos_check(stats, screen, gun, putins, bullets)
+
+
+def inos_check(stats, screen, gun, putins, bullets):
+    """проверка, добралась ли армия до края экрана"""
+    screen_rect = screen.get_rect()
+    for putin in putins.sprites():
+        if putin.rect.bottom >= screen_rect.bottom:
+            gun_kill(stats, screen, gun, putins, bullets)
+            break
 
 
 def create_army(screen, putins):
@@ -81,3 +104,12 @@ def create_army(screen, putins):
             putin.rect.x = putin.x
             putin.rect.y = putin.rect.height + (putin.rect.height * row_number)
             putins.add(putin)
+
+
+def chek_high_score(stats, sc):
+    """проверка новых рекордов"""
+    if stats.score > stats.high_score:
+        stats.high_score = stats.score
+        sc.image_high_score()
+        with open('highscore.txt', 'w') as f:
+            f.write(str(stats.high_score))

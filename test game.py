@@ -2,6 +2,7 @@ import pygame, controls
 from gun import Gun
 from pygame.sprite import Group
 from stats import Stats
+from scores import Scores
 
 
 def run():
@@ -14,13 +15,15 @@ def run():
     putins = Group()
     controls.create_army(screen, putins)
     stats = Stats()
+    sc = Scores(screen, stats)
 
     while True:
         controls.events(screen, gun, bullets)
-        gun.update_gun()
-        controls.update(bg_color, screen, gun, putins, bullets)
-        controls.update_bullets(putins, bullets)
-        controls.update_putins(stats, screen, gun, putins, bullets)
+        if stats.run_game:
+            gun.update_gun()
+            controls.update(bg_color, screen, stats, sc, gun, putins, bullets)
+            controls.update_bullets(screen, stats, sc, putins, bullets)
+            controls.update_putins(stats, screen, gun, putins, bullets)
 
 
 run()
