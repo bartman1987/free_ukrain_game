@@ -1,4 +1,5 @@
-import pygame, controls
+import pygame
+import controls
 from gun import Gun
 from pygame.sprite import Group
 from stats import Stats
@@ -23,7 +24,7 @@ def run():
             gun.update_gun()
             controls.update(bg_color, screen, stats, sc, gun, putins, bullets)
             controls.update_bullets(screen, stats, sc, putins, bullets)
-            controls.update_putins(stats, screen, gun, putins, bullets)
+            controls.update_putins(stats, screen, sc, gun, putins, bullets)
 
 
 run()
