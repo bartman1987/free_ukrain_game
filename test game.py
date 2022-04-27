@@ -3,13 +3,18 @@ from gun import Gun
 from pygame.sprite import Group
 from stats import Stats
 from scores import Scores
+pygame.init()
+
+pygame.mixer.music.load('music/06 Cranioid Attack.mp3')
+pygame.mixer.music.play(-1)
+
 
 
 def run():
     pygame.init()
     screen = pygame.display.set_mode((700, 800))
     pygame.display.set_caption("Украинские защитники")
-    bg_color = (0, 0, 0)
+    bg_color = (1, 1, 1)
     gun = Gun(screen)
     bullets = Group()
     inos = Group()
