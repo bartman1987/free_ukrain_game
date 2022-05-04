@@ -5,8 +5,7 @@ from stats import Stats
 from scores import Scores
 pygame.init()
 
-pygame.mixer.music.load('music/06 Cranioid Attack.mp3')
-pygame.mixer.music.play(-1)
+
 
 
 
