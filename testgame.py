@@ -1,12 +1,10 @@
-import pygame, controls
+import pygame
+import controls
 from gun import Gun
 from pygame.sprite import Group
 from stats import Stats
 from scores import Scores
 pygame.init()
-
-
-
 
 
 def run():
@@ -21,7 +19,7 @@ def run():
     stats = Stats()
     sc = Scores(screen, stats)
 
-    while True: 
+    while True:
         controls.events(screen, gun, bullets)
         if stats.run_game:
             gun.update_gun()
